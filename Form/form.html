@@ -81,7 +81,8 @@
                     <input type="checkbox" id="topic_digester" value="digester" name="topic" disabled="disabled">Mailing
                     list digester
                 </label>
-                <label for="topic" class="error" id="topic-error" style="display: none;">Please select at least 2 topics</label>
+                <label for="topic" class="error" id="topic-error" style="display: none;">Please select at least 2
+                    topics</label>
             </fieldset>
             <p>
                 <input class="submit" type="button" value="Submit">
@@ -94,11 +95,12 @@
         $(document).ready(function () {
             $('.submit').click(function () {
                 var can_submit = true;
+
                 var firstname = $('#firstname').val();
                 if (firstname == '') {
                     $('#firstname-error').show();
                     can_submit = false;
-                } else{
+                } else {
                     $('#firstname-error').hide();
 
                 }
@@ -107,7 +109,7 @@
                     $('#lastname-error').show();
                     can_submit = false;
 
-                }else {
+                } else {
                     $('#lastname-error').hide();
 
                 }
@@ -116,7 +118,7 @@
                     $('#lastname-error').show();
                     can_submit = false;
 
-                }else {
+                } else {
                     $('#lastname-error').hide();
 
                 }
@@ -125,7 +127,7 @@
                     $('#username-error').show();
                     can_submit = false;
 
-                }else {
+                } else {
                     $('#username-error').hide();
 
                 }
@@ -134,7 +136,7 @@
                     $('#password-error').show();
                     can_submit = false;
 
-                }else {
+                } else {
                     $('#password-error').hide();
 
                 }
@@ -143,7 +145,7 @@
                     $('#confirm_password-error').show();
                     can_submit = false;
 
-                }else {
+                } else {
                     $('#confirm_password-error').hide();
 
                 }
@@ -153,7 +155,7 @@
                     $('#email-error').show();
                     can_submit = false;
 
-                }else {
+                } else {
                     $('#email-error').hide();
 
                 }
@@ -164,7 +166,7 @@
                     can_submit = false;
 
                 }
-                
+
                 var agree = $('#agree').val();
                 if (agree == '') {
                     $('#agree-error').show();
@@ -174,34 +176,57 @@
 
                 if ($('#newsletter').is(':checked')) {
                     var topicChecked = $('[name="topic"]:checked').length;
-                   if(topicChecked < 2){
-                    $('#topic-error').show();
-                    can_submit = false;
-                   }else if(topicChecked == 2){
-                    $('#topic-error').hide();
+                    if (topicChecked < 2) {
+                        $('#topic-error').show();
+                        can_submit = false;
+                    } else if (topicChecked == 2) {
+                        $('#topic-error').hide();
 
-                   }
+                    }
 
                 }
 
                 if (can_submit == true) {
-                    alert('Xử lý')
+                    $.ajax({
+                        url: "xuly.php",
+                        type: "POST",
+                        data: {
+                            "firstname": firstname,
+                            "lastname": lastname,
+                            "username": username,
+                            "password": password,
+                            "confirm_password": confirm_password,
+                            "email": email,
+                            "agree": $('#agree').is(':checked'),
+                            "newsletter": $('#newsletter').is(':checked'),
+                            "topic_fuzz": $('#topic_fuzz').is(':checked'),
+                            "topic_digester": $('#topic_digester').is(':checked'),
+                            "topic-error": $('#topic-error').is(':checked'),
+
+
+                        },
+                        global: true,//default: true
+                        success: function (data) {
+                            $("#info").html(data);
+                        }
+                    });
+
                 }
 
             })
-            $('#newsletter').change(function (){
-               var check = $(this).is(':checked');
-               if (check == true) {
-                   $('[name="topic"]').prop('disabled', false);
-                   $('#newsletter_topics').removeClass('gray')
+            $('#newsletter').change(function () {
+                var check = $(this).is(':checked');
+                if (check == true) {
+                    $('[name="topic"]').prop('disabled', false);
+                    $('#newsletter_topics').removeClass('gray')
 
-               }else{
-                $('[name="topic"]').prop('disabled', true);
-                $('#newsletter_topics').addClass('gray')
+                } else {
+                    $('[name="topic"]').prop('disabled', true);
+                    $('#newsletter_topics').addClass('gray')
 
-               }
+                }
             })
-            $('#agree').on('change', function(){
+            $('#agree').on('change', function () {
                 $('#agree-error').hide();
             })
         });
